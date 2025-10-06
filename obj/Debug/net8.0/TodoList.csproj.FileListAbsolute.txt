@@ -12,3 +12,4 @@ C:\Users\sobcz\source\repos\TodoList\TodoList\obj\Debug\net8.0\refint\TodoList.d
 C:\Users\sobcz\source\repos\TodoList\TodoList\obj\Debug\net8.0\TodoList.pdb
 C:\Users\sobcz\source\repos\TodoList\TodoList\obj\Debug\net8.0\TodoList.genruntimeconfig.cache
 C:\Users\sobcz\source\repos\TodoList\TodoList\obj\Debug\net8.0\ref\TodoList.dll
+C:\Users\sobcz\source\repos\TodoList\TodoList\obj\Debug\net8.0\TodoList.sourcelink.json

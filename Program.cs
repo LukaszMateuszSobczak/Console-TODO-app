@@ -4,38 +4,155 @@
     {
         static void Main(string[] args)
         {
+
+            List<string> todos = new List<string>();
+            if (File.Exists("todos.txt"))
+            {
+                todos = File.ReadAllLines("todos.txt").ToList();
+            }
+
+            while (true)
+            {
+                
+                string userChoice = PrintMenuAndGetUserInput(todos);
+                if (!NavigateToSubMenu(userChoice, todos)) {
+                    break;
+                }
+            }
+
+            Console.ReadKey();
+        }
+
+        static void PrintSelectedOption(string selectedOption)
+        {
+            Console.WriteLine("\tSelected option: " + selectedOption);
+            Console.WriteLine("===========================================");
+        }
+
+        static string PrintMenuAndGetUserInput(List<string> todos)
+        {
             Console.WriteLine("Hello");
-            Console.WriteLine("Waht do you want to do?");
-            Console.WriteLine("[S]ee ale TODOs");
+            Console.WriteLine("What do you want to do?");
+            Console.WriteLine("[S]ee all TODOs");
             Console.WriteLine("[A]dd a TODO");
             Console.WriteLine("[R]emove a TODO");
             Console.WriteLine("[E]xit");
-
-            string userChoice = Console.ReadLine();
-
-            if (userChoice == "S")
-            {
-                PrintSelectetOption("See all TODOs");
-            }
-            else if (userChoice == "A")
-            {
-                PrintSelectetOption("Add a TODO");
-            }
-            else if (userChoice == "R")
-            {
-                PrintSelectetOption("Remove TODO");
-            }
-            else if (userChoice == "E")
-            {
-                PrintSelectetOption("Exit program");
-            }
-
-
+            string userChoice = Console.ReadLine().ToLower();
+            return userChoice;
         }
 
-        static void PrintSelectetOption(string selectedOption)
+        static bool NavigateToSubMenu(string userChoice, List<string> todos)
         {
-            Console.WriteLine("Selected option: " + selectedOption);
+            switch (userChoice)
+            {
+                case "s":
+                    PrintSelectedOption("See all TODOs");
+                    Console.WriteLine(PrintAllTodos(todos));
+                    ClearMenu();
+                    break;
+                case "a":
+                    PrintSelectedOption("Add a TODO");
+                    AddNewTodos(todos);
+                    ClearMenu();
+                    break;
+                case "r":
+                    PrintSelectedOption("Remove TODO");
+                    RemoveTodo(todos);
+                    ClearMenu();
+                    break;
+                case "e":
+                    PrintSelectedOption("Exit and save!");
+                    SaveToFile(todos);
+                    Console.WriteLine("Press any key to exit...");
+                    return false;
+                default:
+                    Console.WriteLine("\aWrong input try again!");
+                    break;
+            }
+            return true;
         }
+
+        static void AddNewTodos(List<string> todos)
+        {
+            string todo;
+            while (true)
+            {
+                Console.Write("Enter your todos: ");
+                todo = Console.ReadLine();
+                if (todo == null || todo == "")
+                {
+                    Console.WriteLine("Empty todos. Try again!");
+                }
+                else if (todos.Contains(todo))
+                {
+                    Console.WriteLine("Todos already exist. Try again!");
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            todos.Add(todo);
+            Console.WriteLine("Todos added.");
+            
+
+        }
+
+        static string PrintAllTodos(List<string> todos)
+        {
+            string allTodos = "";
+            if (todos.Count == 0)
+            {
+                allTodos = "Nothing to show";
+            }
+            else
+            {
+                
+                for (int i = 0; i < todos.Count; i++)
+                {
+                    allTodos += $"{i + 1}. {todos[i]}\n";
+                }
+            }
+
+            return allTodos;
+        }
+
+        static void RemoveTodo(List<string> todos)
+        {
+            string userInput;
+            while (true)
+            {
+                Console.WriteLine($"Saved todos: \n{PrintAllTodos(todos)}");
+                Console.Write("Input index of todos for delete: ");
+                userInput = Console.ReadLine();
+                bool isParsingSuccesful = int.TryParse(userInput, out int result);
+
+                if (isParsingSuccesful)
+                {
+                    result -= 1; // actual index of element inside of list
+                    if (result < todos.Count && result >= 0)
+                    {
+                        todos.Remove(todos[result]);
+                        Console.WriteLine("Element deleted.");
+                        break;
+                    }
+                }
+                Console.WriteLine("Wrong index. Try again");
+            }
+        }
+
+        static void SaveToFile(List<string> todos)
+        {
+            File.WriteAllLines("todos.txt", todos);
+        }
+
+        static void ClearMenu()
+        {
+            Console.WriteLine("Press any key to back to main menu");
+            Console.ReadKey();
+            Console.Clear();
+        }
+        
     }
 }
