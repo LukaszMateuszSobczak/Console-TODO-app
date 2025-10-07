@@ -13,9 +13,10 @@
 
             while (true)
             {
-                
+
                 string userChoice = PrintMenuAndGetUserInput(todos);
-                if (!NavigateToSubMenu(userChoice, todos)) {
+                if (!NavigateToSubMenu(userChoice, todos))
+                {
                     break;
                 }
             }
@@ -79,23 +80,28 @@
             {
                 Console.Write("Enter your todos: ");
                 todo = Console.ReadLine();
-                if (todo == null || todo == "")
-                {
-                    Console.WriteLine("Empty todos. Try again!");
-                }
-                else if (todos.Contains(todo))
-                {
-                    Console.WriteLine("Todos already exist. Try again!");
-                }
-                else
+                if (isTodoValid(todo, todos))
                 {
                     todos.Add(todo);
                     Console.WriteLine("Todos added.");
                     break;
                 }
             }
+        }
 
-            
+        static bool isTodoValid(string todo, List<string> todos)
+        {
+            if (todo == "" || todo == null)
+            {
+                Console.WriteLine("Empty todos. Try again!");
+                return false;
+            }
+            if (todos.Contains(todo))
+            {
+                Console.WriteLine("Todos already exist. Try again!");
+                return false;
+            }
+            return true;
         }
 
         static string PrintAllTodos(List<string> todos)
@@ -103,17 +109,14 @@
             string allTodos = "";
             if (todos.Count == 0)
             {
-                allTodos = "Nothing to show";
-            }
-            else
-            {
-                
-                for (int i = 0; i < todos.Count; i++)
-                {
-                    allTodos += $"{i + 1}. {todos[i]}\n";
-                }
+                return "Nothing to show";
+
             }
 
+            for (int i = 0; i < todos.Count; i++)
+            {
+                allTodos += $"{i + 1}. {todos[i]}\n";
+            }
             return allTodos;
         }
 
@@ -123,22 +126,33 @@
             while (true)
             {
                 Console.WriteLine($"Saved todos: \n{PrintAllTodos(todos)}");
+                if (todos.Count == 0)
+                {
+                    break;
+                }
                 Console.Write("Input index of todos for delete: ");
                 userInput = Console.ReadLine();
-                bool isParsingSuccesful = int.TryParse(userInput, out int result);
+                
 
-                if (isParsingSuccesful)
-                {
-                    result -= 1; // actual index of element inside of list
-                    if (result < todos.Count && result >= 0)
-                    {
-                        todos.RemoveAt(result);
-                        Console.WriteLine("Element deleted.");
-                        break;
-                    }
-                }
+                if(isTodoIndexValid(userInput, todos.Count))
+                { 
+                    todos.RemoveAt(int.Parse(userInput) - 1);
+                    Console.WriteLine("Element deleted.");
+                    break;
+                } 
                 Console.WriteLine("Wrong index. Try again");
             }
+        }
+
+        static bool isTodoIndexValid(string input, int todosCount)
+        {
+            bool isParsingSuccesful = int.TryParse(input, out int index);
+
+            if (isParsingSuccesful && index > 0 && index <= todosCount)
+            { 
+                return true;
+            }
+            return false;
         }
 
         static void SaveToFile(List<string> todos)
@@ -157,6 +171,6 @@
             Console.ReadKey();
             Console.Clear();
         }
-        
+
     }
 }
