@@ -8,7 +8,7 @@
             List<string> todos = new List<string>();
             if (File.Exists("todos.txt"))
             {
-                todos = File.ReadAllLines("todos.txt").ToList();
+                ReadFromFile(ref todos, "todos.txt");
             }
 
             while (true)
@@ -89,14 +89,13 @@
                 }
                 else
                 {
+                    todos.Add(todo);
+                    Console.WriteLine("Todos added.");
                     break;
                 }
             }
 
-            todos.Add(todo);
-            Console.WriteLine("Todos added.");
             
-
         }
 
         static string PrintAllTodos(List<string> todos)
@@ -133,7 +132,7 @@
                     result -= 1; // actual index of element inside of list
                     if (result < todos.Count && result >= 0)
                     {
-                        todos.Remove(todos[result]);
+                        todos.RemoveAt(result);
                         Console.WriteLine("Element deleted.");
                         break;
                     }
@@ -145,6 +144,11 @@
         static void SaveToFile(List<string> todos)
         {
             File.WriteAllLines("todos.txt", todos);
+        }
+
+        static void ReadFromFile(ref List<string> todos, string filePath)
+        {
+            todos = File.ReadAllLines(filePath).ToList();
         }
 
         static void ClearMenu()
